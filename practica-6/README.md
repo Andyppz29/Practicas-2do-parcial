@@ -1,10 +1,11 @@
 Guia para levantar proyecto 
 
-instalacion de dependencias
+## instalacion de dependencias
 npm install mysql2
+--
 npm install 
 
-inicializa el servidor 
+## inicializa el servidor 
 npm run start:dev
 
 
