@@ -1,13 +1,14 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody } from '@nestjs/websockets';
+import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer } from '@nestjs/websockets';
 import { ControlIdiomaService } from './control_idioma.service';
 import { CreateControlIdiomaDto } from './dto/create-control_idioma.dto';
 import { UpdateControlIdiomaDto } from './dto/update-control_idioma.dto';
 import { Server } from 'socket.io';
 
-@WebSocketGateway()
+@WebSocketGateway({cors: true})
 export class ControlIdiomaGateway {
   constructor(private readonly controlIdiomaService: ControlIdiomaService) {}
 
+  @WebSocketServer()
   wss: Server;
 
   @SubscribeMessage('createControlIdioma')
@@ -20,6 +21,7 @@ export class ControlIdiomaGateway {
   @SubscribeMessage('findAllControlIdioma')
   async findAll() {
     const controls = await this.controlIdiomaService.findAll();
+    console.log(controls)
     this.wss.emit('allControlIdioma', controls);
     return controls;
   }

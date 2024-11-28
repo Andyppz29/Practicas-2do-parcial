@@ -1,14 +1,16 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
+import { WebSocketGateway, SubscribeMessage, MessageBody, OnGatewayConnection, OnGatewayDisconnect, WebSocketServer } from '@nestjs/websockets';
 import { EstudianteService } from './estudiante.service';
 import { CreateEstudianteDto } from './dto/create-estudiante.dto';
 import { UpdateEstudianteDto } from './dto/update-estudiante.dto';
 import { Server, Socket } from 'socket.io';
 
-@WebSocketGateway()
+@WebSocketGateway({cors: true})
 export class EstudianteGateway implements OnGatewayConnection, OnGatewayDisconnect{
   constructor(private readonly estudianteService: EstudianteService) {}
+  
   private connectedClients: Map<string, Socket> = new Map(); 
 
+  @WebSocketServer()
   wss: Server;
 
   handleConnection(client: Socket) {
@@ -19,10 +21,6 @@ export class EstudianteGateway implements OnGatewayConnection, OnGatewayDisconne
   handleDisconnect(client: Socket) {
     this.connectedClients.delete(client.id);
     console.log(`Cliente desconectado: ${client.id}`);
-  }
-
-  afterInit(server: Server) {
-    this.wss = server;
   }
 
   @SubscribeMessage('createEstudiante')

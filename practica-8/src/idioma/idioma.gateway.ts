@@ -1,18 +1,15 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody } from '@nestjs/websockets';
+import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer } from '@nestjs/websockets';
 import { IdiomaService } from './idioma.service';
 import { CreateIdiomaDto } from './dto/create-idioma.dto';
 import { UpdateIdiomaDto } from './dto/update-idioma.dto';
 import { Server } from 'socket.io';
 
-@WebSocketGateway()
+@WebSocketGateway({cors: true})
 export class IdiomaGateway {
   constructor(private readonly idiomaService: IdiomaService) {}
 
+  @WebSocketServer()
   wss: Server;
-
-  afterInit(server: Server) {
-    this.wss = server;
-  }
 
   @SubscribeMessage('createIdioma')
   async create(@MessageBody() createIdiomaDto: CreateIdiomaDto) {

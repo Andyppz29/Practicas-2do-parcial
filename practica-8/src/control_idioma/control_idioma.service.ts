@@ -18,7 +18,9 @@ export class ControlIdiomaService {
   }
 
   async findAll(): Promise<ControlIdioma[]> {
-    return await this.controlRepository.find({ relations: ['estudiante', 'idioma'] });
+    const control = await this.controlRepository.find({ relations: ['estudiante', 'idioma'] });
+    console.log(control)
+    return control;
   }
 
   async findOne(id: number): Promise<ControlIdioma> {
